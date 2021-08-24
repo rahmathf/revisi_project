@@ -16,18 +16,18 @@ class Sampah extends BaseController
     }
     public function index()
     {
-        $currentPage = $this->request->getVar('page_sampah') ? $this->request->getVar('page_sampah') : 1;
-        $keyword = $this->request->getVar('keyword'); //search
-        if ($keyword) {
-            $sampah = $this->sampahModel->search($keyword);
-        } else {
-            $sampah = $this->sampahModel;
-        }
+        // $currentPage = $this->request->getVar('page_sampah') ? $this->request->getVar('page_sampah') : 1;
+        // $keyword = $this->request->getVar('keyword'); //search
+        // if ($keyword) {
+        //     $sampah = $this->sampahModel->search($keyword);
+        // } else {
+        //     $sampah = $this->sampahModel;
+        // }
         $data = [
             'title' => 'Daftar Sampah',
-            'sampah' => $sampah->paginate(3, 'sampah'),
-            'pager' => $this->sampahModel->pager,
-            'currentPage' => $currentPage
+            'sampah' => $this->sampahModel->findAll(),
+            // 'pager' => $this->sampahModel->pager,
+            // 'currentPage' => $currentPage
         ];
         return view('sampah/sampah', $data);
     }

@@ -17,17 +17,17 @@
                         <input type="hidden" name="id" value="<?= $user['id'] ?>">
                         <div class="form-group">
                             <label for="nama">Nama Nasabah</label>
-                            <input class="form-control" type="text" name="nama" id="nama" value="<?= $user['nama'] ?>">
+                            <input readonly class="form-control" type="text" name="nama" id="nama" value="<?= $user['nama'] ?>">
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">RT</span>
                             </div>
-                            <input class="form-control" type="text" name="rt" id="rt" value="<?= $user['rt'] ?>">
+                            <input readonly class="form-control" type="text" name="rt" id="rt" value="<?= $user['rt'] ?>">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">RW</span>
                             </div>
-                            <input class="form-control" type="text" name="rw" id="rw" value="<?= $user['rw'] ?>">
+                            <input readonly class="form-control" type="text" name="rw" id="rw" value="<?= $user['rw'] ?>">
                         </div>
                         <div class="form-group">
                         </div>
@@ -37,7 +37,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Rp</span>
                                 </div>
-                                <input class="form-control" type="text" name="saldo" id="saldo" value="<?= $user['saldo'] ?>">
+                                <input readonly class="form-control" type="text" name="saldo" id="saldo" value="<?= $user['saldo'] ?>">
                             </div>
                         </div>
                         <hr>
@@ -56,7 +56,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Rp</span>
                                 </div>
-                                <input type="text" id="sisa" name="sisa" value="" class="form-control">
+                                <input readonly type="text" id="sisa" name="sisa" value="" class="form-control">
                             </div>
                         </div>
                         <div class="form-group text-center">

@@ -24,32 +24,31 @@ class Transaksi extends BaseController
     }
     public function index()
     {
-        // $currentPage = $this->request->getVar('page_transaksi') ? $this->request->getVar('page_transaksi') : 1;
-        $keyword = $this->request->getVar('keyword'); //search
-        if ($keyword) {
-            $transaksi = $this->transaksiModel->search($keyword);
-        } else {
-            $transaksi = $this->transaksiModel;
-        }
-
-
         $data = [
             'title' => 'Transaksi | SemangatePoor',
-            'transaksi' =>  $transaksi,
-            // 'pager' => $this->transaksiModel->pager,
-            // 'currentPage' => $currentPage,
-            'transaksi' => $this->transaksiModel->getTransaksi(),
-
+            'transaksiMasuk' =>  $this->transaksiModel->listTransaksiByJenis('masuk'),
+            'transaksiKeluar' =>  $this->transaksiModel->listTransaksiByJenis('keluar'),
             'user' => $this->authModel->find(session('id'))
         ];
         return view('transaksi/index', $data);
     }
-
+    public function addTransaksi($idTransaksi)
+    {
+        // dd($this->transaksiModel->getBy(51));
+        $data = [
+            'title' => 'Setor Sampah (Lagi) | SemangatePoor',
+            'transaksi' => $this->transaksiModel->getBy($idTransaksi),
+            'detail_transaksi' => $this->detail->getDetail($idTransaksi),
+            'user' => $this->authModel->find(session('id'))
+        ];
+        // dd($data);
+        return view('transaksi/setorTambah', $data);
+    }
     public function setor($id)
     {
         // get temp
         // dd($this->authModel->find($id));
-        $temp=$this->tempModel->getTemp($id);
+        $temp = $this->tempModel->getTemp($id);
         $idSampah = array();
         $sampah = null;
         if (!empty($temp)) {
@@ -65,7 +64,7 @@ class Transaksi extends BaseController
             'nasabah' => $this->authModel->find($id),
             'sampah' => $sampah,
             'user' => $this->authModel->find(session('id'))
-            
+
         ];
         return view('transaksi/setor', $data);
     }
@@ -78,65 +77,60 @@ class Transaksi extends BaseController
         // dd($data);
         return view('transaksi/tarik', $data);
     }
-    // public function setorSampah()
-    // {
-    //     $var = $this->request->getPost();
-    //     $detail = [];
-    //     foreach ($var['jenis'] as $key => $value) {
-    //         $detailTr = [
-    //             'id_sampah' => $value,
-    //             'qty' => $var['qty'][$key],
-    //             'harga' => $var['hargaSatuan'][$key],
-    //             'harga_total' => $var['qty'][$key] * $var['hargaSatuan'][$key]
-    //         ];
-    //         array_push($detail, $detailTr);
-    //     }
-    //     // dd($var);
-    //     // dapatkan user yang saat ini login, untuk isi kolom admin pada tabel transaksi
-    //     $admin = (object)$this->authModel->find(session()->id);
-    //     $data = [
-    //         'id_admin' => $admin->id,
-    //         'id_user' => $this->request->getPost('id'),
-    //         'jenis_transaksi' => 'masuk',
-    //         'total_harga' => $this->request->getPost('total'),
-    //         'detail_transaksi' => $detail
-    //     ];
-    //     $result = $this->transaksiModel->setorSampah($data);
-    //     return redirect()->to('/transaksi')->with('pesan', 'Transaksi Berhasil dengan ID Transaksi = ' . $result);
-    // }
+
     public function setorSampah()
     {
-        $id=$this->request->getPost('id');
-        $admin=$this->request->getPost('admin');
-        $data=$this->tempModel->getTemp($id);
+        $id = $this->request->getPost('id');
+        $admin = $this->request->getPost('admin');
+        $data = $this->tempModel->getTemp($id);
         // var_dump($data);
         // die;
-        $go=$this->transaksiModel->setor($id,$data,$admin);
-        if($go){
+        $go = $this->transaksiModel->setor($id, $data, $admin);
+        if ($go) {
             // kalau success kosongkan tabel temp berdasarkan id_user
             $this->tempModel->removeByUser($id);
-            echo json_encode(['pesan'=>'success']);
+            echo json_encode(['pesan' => 'success']);
         }
-        // dd($totalharga);
-        /*
-        isi data = id_user, id_sampah, qty, jenis, harga
-        isi dari tabel transaksi=
-        [
-            id_admin=>id_admin,
-            id_user=>id_user,
-            jenis_transaksi=>masuk/keluar,
-            total_harga=>total_harga,
-        ];
-        isi dari tabel detail tr adalah
-        [
-            id_transaksi=>id_transaksi,
-            id_sampah=>id_sampah,
-            harga=>harga,
-            bobot=>bobot,
-        ]
-        jadi insert transaksi dulu baru detail
-        */
-        // $
+    }
+    public function ahah()
+    {
+        dd($this->transaksiModel->getBy(51));
+    }
+    public function setorSampahLanjutan()
+    {
+        $id = $this->request->getPost('id');
+        $admin = $this->request->getPost('admin');
+        $idTransaksi = $this->request->getPost('idTransaksi');
+        $temp = [];
+        $data = $this->tempModel->getTemp($id);
+        // langsung save ke detail by idTransaksi
+        foreach ($data as $d) {
+            $new = [
+                'id_transaksi' => $idTransaksi,
+                'id_sampah' => $d['id_sampah'],
+                'berat' => $d['qty'],
+                'harga' => $d['harga'],
+                'harga_total' => floatval($d['qty']) * floatval($d['harga'])
+            ];
+            array_push($temp, $new);
+        }
+        $totalharga = 0;
+        // dd($admin);
+        foreach ($data as $d) {
+            $totalharga += floatval($d['qty']) * floatval($d['harga']);
+        }
+        // update nominal transaksi
+        $transaksiLama=$this->transaksiModel->getBy($idTransaksi);
+        // jumlahkan nominal lama + total baru
+        $totalbaru=floatval($transaksiLama['total_harga'])+floatval($totalharga);
+        $this->transaksiModel->set('total_harga',$totalbaru);
+        $this->transaksiModel->update($idTransaksi);
+        // var_dump($data);
+        // die;
+        $this->detail->insertBatch($temp);
+        $this->authModel->tambahSaldo($id, $totalharga);
+        $this->tempModel->removeByUser($id);
+        echo json_encode(['pesan' => 'success']);
     }
     public function tarikSaldo()
     {
@@ -237,8 +231,8 @@ class Transaksi extends BaseController
     }
     public function dropdownList()
     {
-        $id=$this->request->getGet('id');
-        $temp=$this->tempModel->getTemp($id);
+        $id = $this->request->getGet('id');
+        $temp = $this->tempModel->getTemp($id);
         $idSampah = array();
         $sampah = null;
         if (!empty($temp)) {
@@ -253,20 +247,20 @@ class Transaksi extends BaseController
     }
     public function getTempSetoran()
     {
-        $id=$this->request->getGet('id');
+        $id = $this->request->getGet('id');
         $data = $this->tempModel->getTemp($id);
         // dd($data);
-        $hasil=array();
+        $hasil = array();
         foreach ($data as $d) {
-            $value=array(
-                'id_sampah'=>$d['id_sampah'],
-                'jenis'=>$d['jenis'],
-                'harga'=>$d['harga'],
-                'banyak'=>$d['qty'],
-                'harga_final'=>$d['harga']*$d['qty'],
-                'aksi'=>'<button onclick="hapusTemp(this)" data-id="'.$d['id'].'" class="btn btn-danger"><i class="fas fa-trash"></i></button>'
+            $value = array(
+                'id_sampah' => $d['id_sampah'],
+                'jenis' => $d['jenis'],
+                'harga' => $d['harga'],
+                'banyak' => $d['qty'],
+                'harga_final' => $d['harga'] * $d['qty'],
+                'aksi' => '<button onclick="hapusTemp(this)" data-id="' . $d['id'] . '" class="btn btn-danger"><i class="fas fa-trash"></i></button>'
             );
-            array_push($hasil,$value);
+            array_push($hasil, $value);
         }
         echo json_encode($hasil);
     }
@@ -285,7 +279,7 @@ class Transaksi extends BaseController
     }
     public function hapusTemp()
     {
-        $id=$this->request->getPost('id');
+        $id = $this->request->getPost('id');
         $this->tempModel->delete($id);
         echo 'success';
     }

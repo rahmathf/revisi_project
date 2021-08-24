@@ -3,9 +3,139 @@
 
 <div class="container-fluid">
 
+
+    <div class="container-fluid">
+        <?php if (session()->getFlashdata('pesan')) : ?>
+            <div class="alert alert-success" role="alert">
+                <?= session()->getFlashdata('pesan'); ?>
+            </div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('del')) : ?>
+            <div class="alert alert-danger" role="alert">
+                <?= session()->getFlashdata('del'); ?>
+            </div>
+        <?php endif; ?>
+        <div class="row">
+            <h4>Transaksi</h4>
+            <div class="col-12 col-sm-8 col-md-6 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="list-menu" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#tmasuk" role="tab" aria-selected="true">Transaksi Masuk</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#tkeluar" role="tab" aria-controls="history" aria-selected="false">Transaksi Keluar</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Daftar Transaksi</h4>
+                        <h6 class="card-subtitle mb-2">Bank Sampah Purbalingga</h6>
+                        <div class="col-sm-6">
+                            <button data-toggle="modal" data-target="#rekapModal" class="my-3 btn btn-primary"><i class="fas fa-file-pdf"></i> Rekap Transaksi</button>
+                        </div>
+                        <div class="tab-content mt-3">
+                            <div class="tab-pane active" id="tmasuk" role="tabpanel">
+                                <table data-toggle="table" data-search="true" data-pagination="true" class="table table-stripped">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Nasabah</th>
+                                            <th>Nominal</th>
+                                            <th>Jenis Transaksi</th>
+                                            <th>Tanggal Transaksi</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $no = 1;
+                                        foreach ($transaksiMasuk as $tr) : ?>
+                                            <tr>
+                                                <td><?= $no ?></td>
+                                                <td><?= $tr->nama ?></td>
+                                                <td>Rp.<?= $tr->total_harga ?></td>
+                                                <td class=" text-center">
+                                                    <div class="badge badge-success"><?= $tr->jenis_transaksi ?></div>
+                                                </td>
+                                                <td><?= $tr->updated_at ?></td>
+                                                <td>
+                                                    <button data-user="<?=$tr->user_id?>" data-toggle="modal" data-target="#detailModal" data-jenis="<?= $tr->jenis_transaksi ?>" data-total="<?= $tr->total_harga ?>" data-nama="<?= $tr->nama ?>" data-tanggal="<?= $tr->created_at ?>" data-id="<?= $tr->id ?>" class="btn btn-primary btn-sm btn-icon-split">
+                                                        <i class="fas fa-eye"></i>
+                                                        <span class="text">Detail</span>
+                                                    </button>
+
+                                                    <button  data-id="<?= $tr->id ?>" onclick="hapus(this)" class="btn btn-sm btn-danger btn-icon-split">
+                                                        <i class="fas fa-trash"></i>
+                                                        <span class="text">Hapus</span>
+                                                    </button>
+                                                    <?php if (date('d m y', strtotime($tr->created_at)) == date('d m y')) : ?>
+                                                        <a href="transaksi/addTransaksi/<?=$tr->id?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                                                    <?php endif ?>
+                                                </td>
+                                            </tr>
+                                        <?php $no++;
+                                        endforeach ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="tab-pane" id="tkeluar" role="tabpanel" aria-labelledby="history-tab">
+                                <table data-toggle="table" data-search="true" data-pagination="true" class="table table-stripped">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Nasabah</th>
+                                            <th>Nominal</th>
+                                            <th>Jenis Transaksi</th>
+                                            <th>Tanggal Transaksi</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $no = 1;
+                                        foreach ($transaksiKeluar as $tr) : ?>
+                                            <tr>
+                                                <td><?= $no ?></td>
+                                                <td><?= $tr->nama ?></td>
+                                                <td>Rp.<?= $tr->total_harga ?></td>
+                                                <td class=" text-center">
+                                                    <div class="badge badge-danger"><?= $tr->jenis_transaksi ?></div>
+                                                </td>
+                                                <td><?= $tr->created_at ?></td>
+                                                <td>
+                                                    <button data-toggle="modal" data-target="#tarikModal" data-jenis="<?= $tr->jenis_transaksi ?>" data-total="<?= $tr->total_harga ?>" data-nama="<?= $tr->nama ?>" data-tanggal="<?= $tr->created_at ?>" data-id="<?= $tr->id ?>" class="btn btn-primary btn-sm btn-icon-split">
+                                                        <i class="fas fa-eye"></i>
+                                                        <span class="text">Detail</span>
+                                                    </button>
+
+                                                    <button data-id="<?= $tr->id ?>" onclick="hapus(this)" class="btn btn-sm btn-danger btn-icon-split">
+                                                        <i class="fas fa-trash"></i>
+                                                        <span class="text">Hapus</span>
+                                                    </button>
+
+                                                </td>
+                                            </tr>
+                                        <?php $no++;
+                                        endforeach ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <!-- Page Heading -->
     <!-- <h1 class="mb-4 text-gray-800 h3">Blank Page</h1> -->
-
+    <!--
     <div class="mb-4 shadow card">
         <div class="py-3 card-header">
             <h5 class="m-0 font-weight-bold text-primary">Transaksi</h5>
@@ -26,16 +156,7 @@
                     </form>
                 </div>
             </div>
-            <?php if (session()->getFlashdata('pesan')) : ?>
-                <div class="alert alert-success" role="alert">
-                    <?= session()->getFlashdata('pesan'); ?>
-                </div>
-            <?php endif; ?>
-            <?php if (session()->getFlashdata('del')) : ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= session()->getFlashdata('del'); ?>
-                </div>
-            <?php endif; ?>
+            
             <table class="table">
                 <thead>
                     <tr>
@@ -48,52 +169,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($transaksi as $tr) : ?>
-                        <tr>
-                            <td><?= $tr->id ?></td>
-                            <td><?= $tr->nama ?></td>
-                            <td>Rp.<?= $tr->total_harga ?></td>
-                            <td><?php if ($tr->jenis_transaksi == 'masuk') : ?>
-                                    <div class="badge badge-success">Masuk</div>
-                                <?php else : ?>
-                                    <div class="badge badge-danger">Keluar</div>
-                                <?php endif ?>
-                            </td>
-                            <td><?= $tr->created_at ?></td>
-                            <td>
-                                <?php if ($tr->jenis_transaksi == 'keluar') : ?>
-                                    <button data-toggle="modal" data-target="#tarikModal" data-jenis="<?= $tr->jenis_transaksi ?>" data-total="<?= $tr->total_harga ?>" data-nama="<?= $tr->nama ?>" data-tanggal="<?= $tr->created_at ?>" data-id="<?= $tr->id ?>" class="btn btn-primary btn-sm btn-icon-split">
-                                        <i class="fas fa-eye"></i>
-                                        <span class="text">Detail</span>
-                                    </button>
-                                <?php else : ?>
-                                    <button data-toggle="modal" data-target="#detailModal" data-jenis="<?= $tr->jenis_transaksi ?>" data-total="<?= $tr->total_harga ?>" data-nama="<?= $tr->nama ?>" data-tanggal="<?= $tr->created_at ?>" data-id="<?= $tr->id ?>" class="btn btn-primary btn-sm btn-icon-split">
-                                        <i class="fas fa-eye"></i>
-                                        <span class="text">Detail</span>
-                                    </button>
-                                <?php endif ?>
-
-                                <button data-id="<?= $tr->id ?>" onclick="hapus(this)" class="btn btn-sm btn-danger btn-icon-split">
-                                    <!-- <span class="icon text-white-50"> -->
-                                    <i class="fas fa-trash"></i>
-                                    <!-- </span> -->
-                                    <span class="text">Hapus</span>
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach ?>
+                   
                 </tbody>
             </table>
 
         </div>
     </div>
+                                -->
 </div>
 <div class="modal modal-fade" id="detailModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5>Detail Transaksi Setor</h5>
-                <a class="btn btn-danger"><i class="fas fa-file-pdf"></i>Cetak</a>
+                <a id="cetak" class="btn btn-danger"><span><i class="fas fa-file-pdf"> </i></span> Cetak</a>
+                <a id="tarikSaldo" class="btn btn-warning text-white"><span><i class="fas fa-coins"> </i></span> Tarik Saldo</a>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -182,7 +272,8 @@
         modal.find('h6#namaNasabah').text(tombol.data('nama'))
         modal.find('h6#tanggalTransaksi').text(tombol.data('tanggal'))
         modal.find('#totalTR').text('Total Transaksi: Rp.' + tombol.data('total'))
-        modal.find('a').attr('href', '/transaksi/cetakTransaksi/' + tombol.data('id'))
+        modal.find('#cetak').attr('href', '/transaksi/cetakTransaksi/' + tombol.data('id'))
+        modal.find('#tarikSaldo').attr('href', '/transaksi/tarik/' + tombol.data('user'))
         $.ajax({
             type: "GET",
             url: window.origin + "/transaksi/getDetail",
@@ -251,5 +342,10 @@
             }
         })
     }
+
+    $('#list-menu a').on('click', function(e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
 </script>
 <?= $this->endSection(); ?>

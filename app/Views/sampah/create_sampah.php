@@ -33,7 +33,11 @@
                 <div class="row mb-3">
                     <label for="des" class="col-sm-2 col-form-label">Deskripsi</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="des" name="des" value="<?= old('des'); ?>">
+                        <select name="des" id="des" class="form-control">
+                            <option value="organik">Organik</option>
+                            <option value="anorganik">Anorganik</option>
+                        </select>
+                        <!-- <input type="text" class="form-control" id="des" name="des" value="<?= old('des'); ?>"> -->
                     </div>
                 </div>
 

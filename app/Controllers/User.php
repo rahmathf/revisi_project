@@ -22,14 +22,14 @@ class User extends BaseController
 
     public function akun()
     {
-        $currentPage = $this->request->getVar('page_users') ? $this->request->getVar('page_users') : 1;
+        // $currentPage = $this->request->getVar('page_users') ? $this->request->getVar('page_users') : 1;
 
-        $keyword = $this->request->getVar('keyword'); //search
-        if ($keyword) {
-            $user = $this->authModel->search($keyword);
-        } else {
-            $user = $this->authModel;
-        }
+        // $keyword = $this->request->getVar('keyword'); //search
+        // if ($keyword) {
+        //     $user = $this->authModel->search($keyword);
+        // } else {
+        //     $user = $this->authModel;
+        // }
         // d($this->request->getVar('keyword'));
         $data = [
             'title' => 'Halaman Utama | SemangatePoor',
@@ -37,9 +37,10 @@ class User extends BaseController
             // 'auth' => $this->authModel->getakun()
 
             // $this->authModel->findAll()
-            'auth' => $user->paginate(5, 'users'),
-            'pager' => $this->authModel->pager,
-            'currentPage' => $currentPage
+            // 'auth' => $user->paginate(5, 'users'),
+            'auth' => $this->authModel->findAll(),
+            // 'pager' => $this->authModel->pager,
+            // 'currentPage' => $currentPage
         ];
         return view('user/akun', $data);
     }

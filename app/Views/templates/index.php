@@ -17,6 +17,7 @@
 
     <!-- Custom styles for this template-->
     <link href="<?= base_url('/css/sb-admin-2.min.css'); ?>" rel="stylesheet">
+    <link href="<?= base_url('/bootstrap-table/bootstrap-table.min.css'); ?>" rel="stylesheet">
     <!-- bootstrap table -->
 
 </head>
@@ -98,6 +99,7 @@
     <!-- Custom scripts for all pages-->
     <script src="<?= base_url(); ?>/js/sb-admin-2.min.js"></script>
     <script src="<?= base_url(); ?>/js/jquery-nested-form.js"></script>
+    <script src="<?= base_url(); ?>/bootstrap-table/bootstrap-table.min.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
@@ -129,6 +131,7 @@
         $('#foto').change(function() {
             previewImg(this)
         })
+        // $('table').bootstrapTable()
     </script>
     <?= $this->renderSection('custom_script'); ?>
 

@@ -16,14 +16,14 @@
                 <div class="col-sm-6">
                     <a href="/sampah/create" class="btn btn-primary">Tambah Data Sampah</a>
                 </div>
-                <div class="col-sm-6">
+                <!-- <div class="col-sm-6">
                     <form action="" method="GET">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="Masukkan keyword pencarian.." name="keyword">
                             <button class="btn btn-outline-secondary" type="submit" name="submit">Cari</button>
                         </div>
                     </form>
-                </div>
+                </div> -->
 
             </div>
             <?php if (session()->getFlashdata('pesan')) : ?>
@@ -36,32 +36,31 @@
                     <?= session()->getFlashdata('del'); ?>
                 </div>
             <?php endif; ?>
-            <table class="table">
+            <table data-toggle="table" data-search="true" data-pagination="true" class="table table-stripped">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Foto</th>
                         <th scope="col">Jenis</th>
                         <th scope="col">Harga(Rp/Kg)</th>
+                        <th scope="col">Keterangan</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <?php $i = 1; ?> -->
-                    <?php $i = 1 + (3 * ($currentPage - 1)); ?>
-                    <?php foreach ($sampah as $sh) : ?>
+                    <?php $i=1; foreach ($sampah as $sh) : ?>
                         <tr>
-                            <th scope="row"><?= $i++; ?></th>
+                            <th scope="row"><?= $i; ?></th>
                             <td><img src="/img/<?= $sh['sampul']; ?>" alt="" class="fsampah"></td>
                             <td><?= $sh['jenis']; ?></td>
                             <td><?= $sh['harga']; ?></td>
+                            <td><?= $sh['des']; ?></td>
                             <td><a href="/sampah/<?= $sh['slug']; ?>" class="btn btn-success">Detail</a></td>
                             <!-- <td><a href="/sampah/detail/<?= $sh['id']; ?>" class="btn btn-success">Detail</a></td> -->
                         </tr>
-                    <?php endforeach; ?>
+                    <?php $i++;endforeach; ?>
                 </tbody>
             </table>
-            <?= $pager->links('sampah', 'sampah_pagination'); ?>
         </div>
 
 

@@ -21,20 +21,20 @@
                     <div class="col-sm-6">
                         <a href="/register" class="btn btn-primary">Tambah Data Akun</a>
                     </div>
-                    <div class="col-sm-6">
+                    <!-- <div class="col-sm-6">
                         <form action="" method="GET">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="Masukkan keyword pencarian.." name="keyword">
                                 <button class="btn btn-outline-secondary" type="submit" name="submit">Cari</button>
                             </div>
                         </form>
-                    </div>
+                    </div> -->
 
                 </div>
-                <table class="table">
+                <table data-toggle="table" data-search="true" data-pagination="true" class="table table-stripped">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col">No</th>
                             <th scope="col">Nama</th>
                             <th scope="col">Username</th>
                             <th scope="col">Saldo(Rp)</th>
@@ -42,19 +42,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1 + (5 * ($currentPage - 1)); ?>
-                        <?php foreach ($auth as $au) : ?>
+                        <?php $i=1; foreach ($auth as $au) : ?>
                             <tr>
-                                <th scope="row"><?= $i++; ?></th>
+                                <th scope="row"><?= $i; ?></th>
                                 <td><?= $au['nama']; ?></td>
                                 <td><?= $au['username']; ?></td>
                                 <td><?= $au['saldo']; ?></td>
                                 <td><a href="/akun/<?= $au['nama']; ?>" class="btn btn-success">Detail</a></td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php $i++;endforeach; ?>
                     </tbody>
                 </table>
-                <?= $pager->links('users', 'auth_pagination'); ?>
             </div>
             <hr>
             <!-- Styling for the area chart can be found in the
