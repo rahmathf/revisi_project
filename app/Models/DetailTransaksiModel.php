@@ -37,4 +37,8 @@ class DetailTransaksiModel extends Model
             ->where('detail_transaksi.id_transaksi', $id_tr)
             ->get()->getResultObject();
     }
+    public function addDetail($data)
+    {
+        $this->insert($data);
+    }
 }

@@ -48,7 +48,7 @@ class AuthModel extends Model
         $user = (object)$this->find($id);
         $saldo = $user->saldo;
         //tambahkan saldo
-        $tambah = $saldo + $nominal;
+        $tambah = floatval($saldo) + floatval($nominal);
         //lakukan update
         $this->update($id, ['saldo' => $tambah]);
         return true;

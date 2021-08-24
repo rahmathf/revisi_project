@@ -36,4 +36,8 @@ class SampahModel extends Model
     {
         return $this->table('sampah')->like('jenis', $keyword);
     }
+    public function getWithout($data)
+    {
+        return $this->table('sampah')->whereNotIn('id',$data)->get()->getResultArray();
+    }
 }

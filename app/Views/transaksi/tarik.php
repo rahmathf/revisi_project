@@ -75,7 +75,7 @@
         const nominal = $('#tarik').val()
         const sisa = Saldo - nominal
         //lakukan perhitungan
-        if (sisa <= 0) {
+        if (sisa < 0) {
             //out of range!
             Swal.fire({
                 icon: 'warning',

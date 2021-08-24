@@ -73,4 +73,38 @@ class TransaksiModel extends Model
     {
         return $this->table('transaksi')->like('users.nama', $keyword);
     }
+    public function setor($id,$data,$admin)
+    {
+        $totalharga=0;
+        // dd($admin);
+        foreach ($data as $d) {
+            $totalharga+=floatval($d['qty'])*floatval($d['harga']);
+        }
+        $transaksi=array(
+            'id_admin'=>$admin,
+            'id_user'=>$id,
+            'jenis_transaksi'=>'masuk',
+            'total_harga'=>$totalharga
+        );
+        $idTransaksi=$this->insert($transaksi,true);
+        // dd($idTransaksi);
+        // insert ke detail transaksi
+        // $detail = [];
+        foreach ($data as $d) {
+            $detailTr = [
+                'id_transaksi' =>$idTransaksi,
+                'id_sampah' => $d['id_sampah'],
+                'berat' => $d['qty'],
+                'harga' => $d['harga'],
+                'harga_total' => floatval($d['qty'])*floatval($d['harga'])
+            ];
+            // array_push($detail, $detailTr);
+            $this->detail->addDetail($detailTr);
+        }
+        // var_dump($detail);
+        // die;
+        // update saldo
+        $this->user->tambahSaldo($id, $totalharga);
+        return true;
+    }
 }
